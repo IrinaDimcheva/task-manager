@@ -1,0 +1,22 @@
+import express, { Express, Request, Response } from 'express';
+import dotenv from 'dotenv';
+dotenv.config();
+import { notFound, errorHandler } from './middlewares/error-handler';
+import authRoutes from './routes/auth';
+
+const port = process.env.PORT || 5000;
+
+const app: Express = express();
+
+app.use('/api/auth', authRoutes);
+
+app.get('/', (req: Request, res: Response) => {
+  res.send('Hello');
+});
+
+app.use(notFound);
+app.use(errorHandler);
+
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
