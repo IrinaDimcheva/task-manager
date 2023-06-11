@@ -3,10 +3,6 @@ import asyncHandler from 'express-async-handler';
 import generateToken from '../utils/jwt';
 import { User } from '../models/user';
 
-const authUser = asyncHandler(async (req: Request, res: Response) => {
-  res.status(200).json({ message: 'Auth user' });
-});
-
 const register = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
   const existingUser = await User.findOne({ email });
@@ -50,7 +46,6 @@ const logout = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export {
-  authUser,
   register,
   login,
   logout

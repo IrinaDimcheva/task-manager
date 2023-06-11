@@ -1,6 +1,6 @@
 import express from 'express';
+import { requireAuth } from '../middlewares/require-auth';
 import {
-  authUser,
   register,
   login,
   logout
@@ -8,9 +8,8 @@ import {
 
 const router = express.Router();
 
-router.post('/verify', authUser);
 router.post('/register', register);
 router.post('/login', login);
-router.post('/logout', logout);
+router.post('/logout', requireAuth, logout);
 
 export default router;

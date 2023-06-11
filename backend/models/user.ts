@@ -21,15 +21,32 @@ interface IUserDoc extends mongoose.Document {
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: true,
+    minlength: [4, 'Name should be at least 4 characters'],
+    maxlength: [20, 'Name shouldn\'t exceed 20 characters'],
+    validate: {
+      validator: function (v) {
+        return /[a-zA-Z0-9]+/g.test(v);
+      },
+      message: props => `${props.value} must contains only latin letters and digits!`
+    }
   },
   email: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   password: {
     type: String,
-    required: true
+    required: true,
+    minlength: [6, 'Password should be at least 6 characters'],
+    maxlength: [35, 'Password shouldn\'t exceed 35 characters'],
+    validate: {
+      validator: function (v) {
+        return /[a-zA-Z0-9]+/g.test(v);
+      },
+      message: props => `${props.value} must contains only latin letters and digits!`
+    }
   }
 }, {
   toJSON: {
