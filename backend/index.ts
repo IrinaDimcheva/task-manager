@@ -10,6 +10,8 @@ const port = process.env.PORT || 5000;
 connectDB();
 const app: Express = express();
 
+app.use(express.json());
+
 app.use('/api/auth', authRoutes);
 
 app.get('/', (req: Request, res: Response) => {
