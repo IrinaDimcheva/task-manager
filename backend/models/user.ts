@@ -15,6 +15,7 @@ interface IUserDoc extends mongoose.Document {
   name: string;
   email: string;
   password: string;
+  matchPassword: (pass: string) => Promise<boolean>;
 }
 
 const userSchema = new mongoose.Schema({
@@ -39,7 +40,7 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-userSchema.pre('save', async function (next) {
+userSchema.pre<IUserDoc>('save', async function (next) {
   if (!this.isModified('password')) {
     next();
   }
@@ -48,10 +49,14 @@ userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
+userSchema.methods.matchPassword = function (password: string) {
+  return bcrypt.compare(password, this.password);
+};
+
 userSchema.statics.build = (attrs: IUserAttrs) => {
   return new User(attrs);
 };
 
 const User = mongoose.model<IUserDoc, IUserModel>('User', userSchema);
 
-export { User };
+export { User, IUserModel };

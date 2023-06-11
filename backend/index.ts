@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from 'express';
+import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 dotenv.config();
 import connectDB from './config/db';
@@ -12,11 +13,9 @@ const app: Express = express();
 
 app.use(express.json());
 
-app.use('/api/auth', authRoutes);
+app.use(cookieParser());
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello');
-});
+app.use('/api/auth', authRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

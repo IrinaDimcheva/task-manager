@@ -29,10 +29,24 @@ const register = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const login = asyncHandler(async (req: Request, res: Response) => {
-  res.status(200).json({ message: 'Login' });
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+
+  if (user && (await user.matchPassword(password))) {
+    generateToken(res, user._id);
+    res.status(200).send(user);
+  } else {
+    res.status(401);
+    throw new Error('Invalid credentials');
+  }
 });
+
 const logout = asyncHandler(async (req: Request, res: Response) => {
-  res.status(200).json({ message: 'Logout' });
+  res.clearCookie('jwt', {
+    httpOnly: true,
+    expires: new Date(0)
+  });
+  res.status(200).json({ message: 'Logged out' });
 });
 
 export {
