@@ -22,12 +22,27 @@ const createTask = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const getAllTasks = async (req: Request, res: Response) => {
+const getAllTasks = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = await User.findById(req.user!._id).populate('tasks');
     res.status(200).send(data);
   } catch (err) {
-    res.status(507).send({ message: err });
+    res.status(507);
+    next(err);
+  }
+};
+
+const updateTask = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params;
+
+  try {
+    const updatedTask = await Task.findByIdAndUpdate(id, req.body, {
+      new: true
+    });
+    res.status(200).send(updatedTask);
+  } catch (err) {
+    res.status(401);
+    next(err);
   }
 };
 
@@ -44,10 +59,11 @@ const deleteTask = async (req: Request, res: Response, next: NextFunction) => {
       res.status(401).json({ message: 'Not allowed' })
     }
   }).catch(next);
-}
+};
 
 export {
   createTask,
   getAllTasks,
+  updateTask,
   deleteTask
 };
