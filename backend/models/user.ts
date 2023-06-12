@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+const { ObjectId } = mongoose.Schema.Types;
 
 interface IUserAttrs {
   name: string;
@@ -25,7 +26,7 @@ const userSchema = new mongoose.Schema({
     minlength: [4, 'Name should be at least 4 characters'],
     maxlength: [20, 'Name shouldn\'t exceed 20 characters'],
     validate: {
-      validator: function (v) {
+      validator: function (v: string) {
         return /[a-zA-Z0-9]+/g.test(v);
       },
       message: props => `${props.value} must contains only latin letters and digits!`
@@ -42,12 +43,13 @@ const userSchema = new mongoose.Schema({
     minlength: [6, 'Password should be at least 6 characters'],
     maxlength: [35, 'Password shouldn\'t exceed 35 characters'],
     validate: {
-      validator: function (v) {
+      validator: function (v: string) {
         return /[a-zA-Z0-9]+/g.test(v);
       },
       message: props => `${props.value} must contains only latin letters and digits!`
     }
-  }
+  },
+  tasks: [{ type: ObjectId, ref: 'Task' }]
 }, {
   toJSON: {
     transform(doc, ret) {
