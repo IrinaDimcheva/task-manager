@@ -1,5 +1,4 @@
 import express from 'express';
-import { requireAuth } from '../middlewares/require-auth';
 import {
   register,
   login,
@@ -10,6 +9,6 @@ const router = express.Router();
 
 router.post('/register', register);
 router.post('/login', login);
-router.post('/logout', requireAuth, logout);
+router.post('/logout', logout);
 
 export default router;

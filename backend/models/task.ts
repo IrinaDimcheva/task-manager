@@ -1,16 +1,20 @@
 import mongoose from 'mongoose';
 
+enum TaskStatus {
+  Created = 'TO DO',
+  Unfinished = 'IN PROGRESS',
+  Finished = 'COMPLETE'
+}
+
 interface ITaskAttrs {
   title: string;
   description: string;
-  // file?: string;
   userId: string;
 }
 
 interface ITaskDoc extends mongoose.Document {
   title: string;
   description: string;
-  // file?: string;
   userId: string;
 }
 
@@ -27,15 +31,17 @@ const taskSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  // file: { 
-  //   data: Buffer, 
-  //   contentType: String 
-  // },
+  status: {
+    type: String,
+    required: true,
+    enum: Object.values(TaskStatus),
+    default: TaskStatus.Created
+  },
   userId: {
     type: String,
     required: true
   }
-});
+}, { timestamps: true });
 
 taskSchema.statics.build = (attrs: ITaskAttrs) => {
   return new Task(attrs);
